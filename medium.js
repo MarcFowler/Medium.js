@@ -35,6 +35,14 @@
             autofocus: false,
             autoHR: true,
             mode: 'rich', // inline, partial, rich
+            toolbar: true, // display a toolbar when editing
+            toolbarButtons: ['bold', 'italicize', 'underline'], // which buttons to include? (match with built-in commands)
+            toolbarToggle: true, // show/hide the toolbar based on focus
+            toolbarOffset: { // offset the top/left positions, based on your toolbar's CSS
+	            top: -43,
+	            left: 0,
+	            width: 0
+            },
             maxLength: -1,
             modifiers: {
                 66: 'bold',
@@ -50,7 +58,8 @@
             cssClasses: {
                 editor: 'Medium',
                 pasteHook: 'Medium-paste-hook',
-                placeholder: 'Medium-placeholder'
+                placeholder: 'Medium-placeholder',
+                toolbar: 'Medium-toolbar'
             },
             attributes: {
                 remove: ['style','class']
@@ -125,6 +134,7 @@
                 }
             },
             preventDefaultEvent: function (e) {
+            	if(!e) return;
                 if (e.preventDefault) {
                     e.preventDefault();
                 } else {
@@ -367,11 +377,66 @@
                     fn.call(null, v);
                     utils.html.deleteNode( pasteHookNode );
                 }, 1);
-            }
+            },
+            /*
+             * Create the toolbar and add it's functionality
+             */
+												toolbar: {
+													elements: {},
+													build: function() {
+														var toolbar = utils.toolbar.elements.toolbar = d.createElement('div');
+														toolbar.className = settings.cssClasses.toolbar;
+														
+														for(var i in settings.toolbarButtons) {
+															var b = settings.toolbarButtons[i], el = d.createElement('button');
+
+															el.innerText = b.charAt(0).toUpperCase() + b.slice(1);
+															el.setAttribute('data-medium-toolbar-action', b);
+															el.className = 'Medium-toolbar-button Medium-toolbar-button-'+b;
+															
+															utils.addEvent(el, 'click', function() {
+																var cmd = this.getAttribute('data-medium-toolbar-action');
+																intercept.command[cmd].call();
+																settings.element.focus();
+															});
+															
+															toolbar.appendChild(el);
+														}
+														
+														d.body.appendChild(toolbar);
+														
+														this.position();
+													},
+													show: function() {
+														if(!utils.toolbar.elements.toolbar) return;
+														utils.toolbar.elements.toolbar.style.display = 'block';
+													},
+													hide: function() {
+														if(!utils.toolbar.elements.toolbar) return;
+														utils.toolbar.elements.toolbar.style.display = 'none';
+													},
+													position: function() {
+														if(!utils.toolbar.elements) return;
+														var pos = settings.element.getBoundingClientRect(), width = settings.element.offsetWidth || 0;
+														utils.toolbar.elements.toolbar.style.top = pos.top + settings.toolbarOffset.top + 'px';
+														utils.toolbar.elements.toolbar.style.left = pos.left + settings.toolbarOffset.left + 'px';
+														utils.toolbar.elements.toolbar.style.width = width + settings.toolbarOffset.width + 'px';
+													}
+												}
         },
         intercept = {
             focus: function(e){
-                //_log('FOCUSED');
+            	if(settings.toolbar && settings.toolbarToggle) utils.toolbar.show();
+            },
+            blur: function(e) {
+            	var eT = event.relatedTarget, eP = utils.toolbar.elements.toolbar, c, o;
+            	
+            	if(!eT) o = true;
+            	if(!o) { c=eT; while((c=c.parentNode)&&c!==eP); o=!c; } // Is it a child of the toolbar? If so, don't hide
+            	
+													if(settings.toolbar && settings.toolbarToggle && o) {
+														utils.toolbar.hide();
+													}
             },
             down: function(e){
                 
@@ -489,6 +554,7 @@
                 utils.addEvent(settings.element, 'keyup', intercept.up);
                 utils.addEvent(settings.element, 'keydown', intercept.down);
                 utils.addEvent(settings.element, 'focus', intercept.focus);
+                utils.addEvent(settings.element, 'blur', intercept.blur);
             },
             preserveElementFocus: function(){
                 
@@ -552,6 +618,12 @@
             
             // Capture Events
             action.listen();
+            
+            // Toolbar?
+            if(settings.toolbar) {
+            	utils.toolbar.build();
+            	utils.addEvent(window, 'resize', utils.toolbar.position);
+            }
             
             // Set as initialized
             cache.initialized = true;

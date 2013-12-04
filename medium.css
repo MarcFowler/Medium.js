@@ -37,3 +37,7 @@
     .Medium.Medium-rich .Medium-placeholder{
         font-style: italic;
         }
+        
+/* Toolbar styles */
+.Medium-toolbar { position: absolute; padding: 10px; background: #f9f9f9; display: none; }
+.Medium-toolbar button { background: none; border: none; padding: 5px; margin: 0 10px 0 0; cursor: pointer; }

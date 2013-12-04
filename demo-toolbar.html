@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Medium.js Toolbar Demo</title>
+<style type="text/css">
+/* Styles for the demo only */
+html,body { margin: 0; padding: 0; }
+#demo-toolbar { padding: 10px; margin: 5%; }
+</style>
+<link rel="stylesheet" href="medium.css" />
+<script type="text/javascript" src="medium.js"></script>
+</head>
+<body>
+
+<div id="demo-toolbar"></div>
+
+<script type="text/javascript">
+new Medium({
+ element: document.getElementById('demo-toolbar'),
+ mode: 'rich',
+ placeholder: 'Click me!',
+ toolbar: true
+});
+</script>
+</body>
+</html>
