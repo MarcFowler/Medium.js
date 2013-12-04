@@ -1,43 +1,49 @@
-.Medium{
-    position: relative;
-    }
+.Medium {
+	position: relative;
+}
+
 .Medium,
-.Medium *{
-    min-height: 1px;
-    outline: none;
-    resize: none;
-    zoom: 1;
-    -moz-box-sizing: border-box;
-	box-sizing: border-box;
-    }
-    
-.Medium p{
+.Medium * {
+	min-height: 1px;
+	outline: none;
+	resize: none;
+	zoom: 1;
+}
+
+.Medium p {
 	position: relative;
 	z-index: 2;
-	}
-    .Medium p:first-child,
-    .Medium .Medium-placeholder + p{
-        margin-top:0;
-        }
-    .Medium p:last-child{
-        margin-bottom:0;
-        }
-.Medium .Medium-paste-hook{
-    position: absolute;
-    opacity:0;
-    }
-.Medium .Medium-placeholder{
+}
+
+.Medium p:first-child,
+.Medium .Medium-placeholder + p {
+	margin-top:0;
+}
+
+.Medium p:last-child {
+	margin-bottom:0;
+}
+
+.Medium .Medium-paste-hook {
+	position: absolute;
+	opacity:0;
+}
+
+.Medium .Medium-placeholder {
 	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
 	filter: alpha(opacity=50);
 	opacity: 0.5;
-    position: absolute;
-    z-index: 1;
-    pointer-events: none;
-    }
-    .Medium.Medium-rich .Medium-placeholder{
-        font-style: italic;
-        }
+	position: absolute;
+	z-index: 1;
+	pointer-events: none;
+}
+
+.Medium.Medium-rich .Medium-placeholder {
+	font-style: italic;
+}
         
 /* Toolbar styles */
 .Medium-toolbar { position: absolute; padding: 10px; background: #f9f9f9; display: none; }
-.Medium-toolbar button { background: none; border: none; padding: 5px; margin: 0 10px 0 0; cursor: pointer; }
+.Medium-toolbar button { background-color: none; border: none; padding: 5px; margin: 0 10px 0 0; cursor: pointer; }
+.Medium-toolbar button:focus { outline: none; }
+.Medium p { min-height: 20px; }

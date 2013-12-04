@@ -387,7 +387,7 @@
 														var toolbar = utils.toolbar.elements.toolbar = d.createElement('div');
 														toolbar.className = settings.cssClasses.toolbar;
 														
-														for(var i in settings.toolbarButtons) {
+														for(var i = 0; i < settings.toolbarButtons.length; i++) {
 															var b = settings.toolbarButtons[i], el = d.createElement('button');
 
 															el.innerText = b.charAt(0).toUpperCase() + b.slice(1);
@@ -402,7 +402,7 @@
 															
 															toolbar.appendChild(el);
 														}
-														
+
 														d.body.appendChild(toolbar);
 														
 														this.position();
@@ -410,6 +410,7 @@
 													show: function() {
 														if(!utils.toolbar.elements.toolbar) return;
 														utils.toolbar.elements.toolbar.style.display = 'block';
+														utils.toolbar.position();
 													},
 													hide: function() {
 														if(!utils.toolbar.elements.toolbar) return;
