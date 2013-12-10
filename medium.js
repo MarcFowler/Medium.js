@@ -36,13 +36,14 @@
             autoHR: true,
             mode: 'rich', // inline, partial, rich
             toolbar: true, // display a toolbar when editing
-            toolbarButtons: ['bold', 'italicize', 'underline'], // which buttons to include? (match with built-in commands)
+            toolbarButtons: ['bold', 'italicize', 'underline', 'anchor'], // which buttons to include? (match with built-in commands)
             toolbarToggle: true, // show/hide the toolbar based on focus
             toolbarOffset: { // offset the top/left positions, based on your toolbar's CSS
 	            top: -43,
 	            left: 0,
 	            width: 0
             },
+            anchorPrompt: null,
             maxLength: -1,
             modifiers: {
                 66: 'bold',
@@ -502,6 +503,19 @@
                 italicize: function(e){
                     utils.preventDefaultEvent(e);
                     d.execCommand( 'italic', false ); _log('Italic');
+                },
+                anchor: function(e) {
+	                utils.preventDefaultEvent(e);
+	                var sel = utils.selection.saveSelection();
+	                var cb = function(href) {
+	                	utils.selection.restoreSelection( sel );
+																		d.execCommand('createLink', false, href);
+	                };
+	                var getHref = settings.anchorPrompt || function(c) {
+	                	var href = prompt('Enter the URL you want to link to.');
+	                	c(href);
+	                };
+	                getHref(cb);
                 },
                 quote: function(e){},
                 paste: function(e){
