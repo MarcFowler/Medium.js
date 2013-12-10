@@ -170,6 +170,19 @@
                 }
                 return destination;
             },
+           
+												relativePosition: function(obj) { // thanks to http://stackoverflow.com/a/4758996/111207
+													var boundingRect = obj.getBoundingClientRect(),
+		            body = document.body || document.getElementsByTagName("body")[0],
+		            clientTop = document.documentElement.clientTop || body.clientTop || 0,
+		            clientLeft = document.documentElement.clientLeft || body.clientLeft || 0,
+		            scrollTop = (window.pageYOffset || document.documentElement.scrollTop || body.scrollTop),
+		            scrollLeft = (window.pageXOffset || document.documentElement.scrollLeft || body.scrollLeft);
+					        return {
+					         top: boundingRect.top + scrollTop - clientTop,
+					         left: boundingRect.left + scrollLeft - clientLeft
+					        };
+												},
             
             /*
              * Handle Selection Logic
@@ -419,9 +432,9 @@
 													},
 													position: function() {
 														if(!utils.toolbar.elements) return;
-														var pos = settings.element.getBoundingClientRect(), width = settings.element.offsetWidth || 0;
-														utils.toolbar.elements.toolbar.style.top = pos.top + settings.toolbarOffset.top + 'px';
-														utils.toolbar.elements.toolbar.style.left = pos.left + settings.toolbarOffset.left + 'px';
+														var pos = settings.element.getBoundingClientRect(), width = settings.element.offsetWidth || 0, relPos = utils.relativePosition(settings.element);
+														utils.toolbar.elements.toolbar.style.top = relPos.top + settings.toolbarOffset.top + 'px';
+														utils.toolbar.elements.toolbar.style.left = relPos.left + settings.toolbarOffset.left + 'px';
 														utils.toolbar.elements.toolbar.style.width = width + settings.toolbarOffset.width + 'px';
 													}
 												}
@@ -648,6 +661,10 @@
             utils.removeEvent(settings.element, 'keyup', intercept.up);
             utils.removeEvent(settings.element, 'keydown', intercept.down);
             utils.removeEvent(settings.element, 'focus', intercept.focus);
+        };
+        
+        this.positionToolbar = function() {
+	        utils.toolbar.position();
         };
         
         init(userOpts);
